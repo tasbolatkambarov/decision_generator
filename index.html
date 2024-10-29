@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="icon" href="favicon.png" type="image/png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Генератор принятия решений</title>
+    <style>
+        /* Основные стили */
+        body {
+            margin: 0;
+            padding: 0;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            font-family: Arial, sans-serif;
+            background-color: #ffffff;
+            color: #333;
+            text-align: center;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        /* Заголовок */
+        h1 {
+            font-size: 1.8em;
+            margin-bottom: 20px;
+            word-wrap: break-word;
+            padding: 0 10px;
+        }
+
+        /* Поле ввода */
+        input {
+            padding: 10px;
+            font-size: 16px;
+            margin-bottom: 15px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            width: 90%;
+            max-width: 300px;
+        }
+
+        /* Кнопка */
+        button {
+            padding: 12px 20px;
+            font-size: 16px;
+            cursor: pointer;
+            color: #ffffff;
+            background: #4CAF50; /* Зеленый цвет кнопки */
+            border: none;
+            border-radius: 5px;
+            font-weight: bold;
+            transition: background 0.3s;
+            width: 90%;
+            max-width: 200px;
+        }
+
+        button:hover {
+            background: #45a049;
+        }
+
+        /* Ответ */
+        .response {
+            margin-top: 30px;
+            font-size: 20px;
+            font-weight: bold;
+            opacity: 1;
+        }
+
+        /* Footer */
+        footer {
+            position: absolute;
+            bottom: 10px;
+            font-size: 12px;
+            color: #777;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        footer a {
+            color: #777;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+        }
+
+        footer a:hover {
+            color: #333;
+        }
+
+        /* Instagram иконка */
+        .instagram-icon {
+            width: 16px;
+            height: 16px;
+            display: inline-block;
+            background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png');
+            background-size: cover;
+            filter: grayscale(100%);
+        }
+
+        /* Адаптивные стили */
+        @media (min-width: 768px) {
+            h1 {
+                font-size: 2.2em;
+            }
+            input {
+                font-size: 18px;
+                max-width: 400px;
+            }
+            button {
+                font-size: 18px;
+                max-width: 250px;
+            }
+            .response {
+                font-size: 24px;
+            }
+        }
+
+        @media (min-width: 1024px) {
+            h1 {
+                font-size: 2.5em;
+            }
+            input, button {
+                max-width: 300px;
+            }
+            .response {
+                font-size: 28px;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Генератор принятия решений</h1>
+    <input type="text" id="question" placeholder="Задай свой вопрос...">
+    <button onclick="getAnswer()">Принять решение</button>
+    <div class="response" id="response"></div>
+
+    <footer>
+        <span>All rights reserved Tasbolat Kambarov - 2024</span>
+        <a href="https://www.instagram.com/taskamba/" target="_blank">
+            <div class="instagram-icon"></div>
+        </a>
+    </footer>
+
+    <script>
+        // Список из 50 ответов
+        const answers = [
+            "Да", "Нет", "Может быть", "Однозначно", "Сомневаюсь", "Решай сам", "Время покажет",
+            "Почему бы и нет?", "Не сейчас", "Определённо да!", "Не стоит", "Спроси еще раз",
+            "Лучше воздержаться", "Да, но будь осторожен", "Нет, но подумай еще раз",
+            "Конечно", "Скорее всего", "Навряд ли", "Абсолютно точно", "Я бы не стал",
+            "Мечты сбываются", "Пока нет", "Попробуй позже", "Обязательно!", 
+            "Сейчас не лучшее время", "Твоя интуиция подскажет", "Не рассчитывай на это",
+            "Это маловероятно", "Сделай это", "Перспективы хорошие", "Не рискуй",
+            "Ответ очевиден: да", "Подожди ещё немного", "Ты уже знаешь ответ", 
+            "Возможно, но не сейчас", "Все возможно", "Есть вероятность", "Ответ будет позже",
+            "Доверься интуиции", "Жди сигнала", "Судьба улыбнется тебе", 
+            "Конечно, нет", "Действуй смело!", "Почти да", "Почти нет", "Ты знаешь, что делать",
+            "Слишком рано", "Позже", "Без сомнений", "Лучше нет"
+        ];
+
+        // Функция генерации ответа
+        function getAnswer() {
+            const question = document.getElementById('question').value;
+            if (!question) {
+                document.getElementById('response').textContent = "Пожалуйста, задайте вопрос!";
+                return;
+            }
+            const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
+            const responseDiv = document.getElementById('response');
+            responseDiv.textContent = randomAnswer;
+        }
+    </script>
+
+</body>
+</html>
