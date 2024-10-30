@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<link rel="icon" href="favicon.png" type="image/png">
+    <link rel="icon" href="favicon.png" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Генератор принятия решений</title>
@@ -22,7 +22,6 @@
             overflow: hidden;
         }
 
-        /* Заголовок */
         h1 {
             font-size: 1.8em;
             margin-bottom: 20px;
@@ -30,7 +29,6 @@
             padding: 0 10px;
         }
 
-        /* Поле ввода */
         input {
             padding: 10px;
             font-size: 16px;
@@ -39,15 +37,15 @@
             border-radius: 5px;
             width: 90%;
             max-width: 300px;
+            box-sizing: border-box;
         }
 
-        /* Кнопка */
         button {
             padding: 12px 20px;
             font-size: 16px;
             cursor: pointer;
             color: #ffffff;
-            background: #4CAF50; /* Зеленый цвет кнопки */
+            background: #4CAF50;
             border: none;
             border-radius: 5px;
             font-weight: bold;
@@ -60,7 +58,6 @@
             background: #45a049;
         }
 
-        /* Ответ */
         .response {
             margin-top: 30px;
             font-size: 20px;
@@ -74,30 +71,39 @@
             bottom: 10px;
             font-size: 12px;
             color: #777;
-            display: flex;
-            align-items: center;
-            gap: 5px;
+            text-align: center;
+            width: 100%;
         }
 
-        footer a {
-            color: #777;
-            text-decoration: none;
+        /* Стили текста в футере */
+        .footer-text {
             display: flex;
+            flex-direction: column;
             align-items: center;
         }
 
-        footer a:hover {
-            color: #333;
+        .footer-text div {
+            margin: 2px 0;
         }
 
         /* Instagram иконка */
         .instagram-icon {
-            width: 16px;
-            height: 16px;
+            width: 14px;
+            height: 14px;
             display: inline-block;
             background-image: url('https://upload.wikimedia.org/wikipedia/commons/a/a5/Instagram_icon.png');
             background-size: cover;
-            filter: grayscale(100%);
+            vertical-align: middle;
+            margin-left: 5px;
+        }
+
+        footer a {
+            color: #333;
+            text-decoration: none;
+        }
+
+        footer a:hover {
+            color: #333;
         }
 
         /* Адаптивные стили */
@@ -139,14 +145,14 @@
     <div class="response" id="response"></div>
 
     <footer>
-        <span>All rights reserved Tasbolat Kambarov - 2024</span>
-        <a href="https://www.instagram.com/taskamba/" target="_blank">
-            <div class="instagram-icon"></div>
-        </a>
+        <div class="footer-text">
+            <div>® Tasbolat Kambarov <a href="https://www.instagram.com/taskamba/" target="_blank"><div class="instagram-icon"></div></a></div>
+            <div>© All rights reserved • 2024</div>
+        </div>
     </footer>
 
     <script>
-        // Список из 50 ответов
+        // Список ответов
         const answers = [
             "Да", "Нет", "Может быть", "Однозначно", "Сомневаюсь", "Решай сам", "Время покажет",
             "Почему бы и нет?", "Не сейчас", "Определённо да!", "Не стоит", "Спроси еще раз",
@@ -162,15 +168,24 @@
             "Слишком рано", "Позже", "Без сомнений", "Лучше нет"
         ];
 
-        // Функция генерации ответа
         function getAnswer() {
-            const question = document.getElementById('question').value;
+            const questionInput = document.getElementById('question');
+            const question = questionInput.value.trim();
+            const responseDiv = document.getElementById('response');
+
             if (!question) {
-                document.getElementById('response').textContent = "Пожалуйста, задайте вопрос!";
+                responseDiv.textContent = "Пожалуйста, задайте вопрос!";
                 return;
             }
+
+            const regex = /^[A-Za-zА-Яа-яЁё\s?]+$/;
+
+            if (!regex.test(question)) {
+                responseDiv.textContent = "Ошибка: Пожалуйста, задайте вопрос!";
+                return;
+            }
+
             const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
-            const responseDiv = document.getElementById('response');
             responseDiv.textContent = randomAnswer;
         }
     </script>
