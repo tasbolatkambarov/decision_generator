@@ -1,12 +1,28 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="icon" href="favicon.png" type="image/png">
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Генератор принятия решений</title>
     <style>
         /* Основные стили */
+        :root {
+            --background-color: #ffffff;
+            --text-color: #333;
+            --button-color: #4CAF50;
+            --button-hover-color: #45a049;
+            --input-border-color: #ddd;
+        }
+
+        /* Темная тема */
+        .dark-theme {
+            --background-color: #333;
+            --text-color: #ffffff;
+            --button-color: #222;
+            --button-hover-color: #555;
+            --input-border-color: #555;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -15,11 +31,68 @@
             justify-content: center;
             height: 100vh;
             font-family: Arial, sans-serif;
-            background-color: #ffffff;
-            color: #333;
+            background-color: var(--background-color);
+            color: var(--text-color);
             text-align: center;
             flex-direction: column;
             overflow: hidden;
+        }
+
+        /* Переключатель темы */
+        .theme-switch-wrapper {
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-size: 12px;
+            color: var(--text-color);
+        }
+
+        .theme-switch {
+            position: relative;
+            display: inline-block;
+            width: 34px;
+            height: 20px;
+        }
+
+        .theme-switch input {
+            opacity: 0;
+            width: 0;
+            height: 0;
+        }
+
+        .slider {
+            position: absolute;
+            cursor: pointer;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: #ccc;
+            transition: 0.4s;
+            border-radius: 34px;
+        }
+
+        .slider:before {
+            position: absolute;
+            content: "";
+            height: 14px;
+            width: 14px;
+            left: 3px;
+            bottom: 3px;
+            background-color: white;
+            transition: 0.4s;
+            border-radius: 50%;
+        }
+
+        input:checked + .slider {
+            background-color: var(--button-color);
+        }
+
+        input:checked + .slider:before {
+            transform: translateX(14px);
         }
 
         h1 {
@@ -29,15 +102,47 @@
             padding: 0 10px;
         }
 
-        input {
-            padding: 10px;
-            font-size: 16px;
-            margin-bottom: 15px;
-            border: 2px solid #ddd;
-            border-radius: 5px;
+        /* Контейнер для поля ввода и крестика очистки */
+        .input-wrapper {
+            position: relative;
             width: 90%;
             max-width: 300px;
+            margin-bottom: 15px;
+        }
+
+        input {
+            padding: 10px 30px 10px 10px;
+            font-size: 16px;
+            border: 2px solid var(--input-border-color);
+            border-radius: 5px;
+            width: 100%;
             box-sizing: border-box;
+            background-color: var(--background-color);
+            color: var(--text-color);
+        }
+
+        /* Плавающий крестик для очистки */
+        .clear-btn {
+            position: absolute;
+            right: 10px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            font-size: 1.2em;
+            color: #777;
+            display: none;
+            user-select: none;
+        }
+
+        .clear-btn:hover {
+            color: #333;
+        }
+
+        /* Адаптивность для мобильных */
+        @media (max-width: 768px) {
+            .clear-btn {
+                font-size: 1.5em;
+            }
         }
 
         button {
@@ -45,7 +150,7 @@
             font-size: 16px;
             cursor: pointer;
             color: #ffffff;
-            background: #4CAF50;
+            background: var(--button-color);
             border: none;
             border-radius: 5px;
             font-weight: bold;
@@ -55,14 +160,23 @@
         }
 
         button:hover {
-            background: #45a049;
+            background: var(--button-hover-color);
         }
 
+        /* Анимация для ответа */
         .response {
             margin-top: 30px;
             font-size: 20px;
             font-weight: bold;
+            opacity: 0;
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            transform: translateY(-10px);
+            color: var(--text-color);
+        }
+
+        .response.show {
             opacity: 1;
+            transform: translateY(0);
         }
 
         /* Footer */
@@ -70,12 +184,11 @@
             position: absolute;
             bottom: 10px;
             font-size: 12px;
-            color: #777;
+            color: var(--text-color);
             text-align: center;
             width: 100%;
         }
 
-        /* Стили текста в футере */
         .footer-text {
             display: flex;
             flex-direction: column;
@@ -86,7 +199,6 @@
             margin: 2px 0;
         }
 
-        /* Instagram иконка */
         .instagram-icon {
             width: 14px;
             height: 14px;
@@ -98,49 +210,32 @@
         }
 
         footer a {
-            color: #333;
+            color: var(--text-color);
             text-decoration: none;
         }
 
         footer a:hover {
-            color: #333;
-        }
-
-        /* Адаптивные стили */
-        @media (min-width: 768px) {
-            h1 {
-                font-size: 2.2em;
-            }
-            input {
-                font-size: 18px;
-                max-width: 400px;
-            }
-            button {
-                font-size: 18px;
-                max-width: 250px;
-            }
-            .response {
-                font-size: 24px;
-            }
-        }
-
-        @media (min-width: 1024px) {
-            h1 {
-                font-size: 2.5em;
-            }
-            input, button {
-                max-width: 300px;
-            }
-            .response {
-                font-size: 28px;
-            }
+            color: #555;
         }
     </style>
 </head>
 <body>
 
+    <!-- Переключатель темы -->
+    <div class="theme-switch-wrapper">
+        <span>Светлая</span>
+        <label class="theme-switch">
+            <input type="checkbox" onchange="toggleTheme()">
+            <span class="slider"></span>
+        </label>
+        <span>Темная</span>
+    </div>
+
     <h1>Генератор принятия решений</h1>
-    <input type="text" id="question" placeholder="Задай свой вопрос...">
+    <div class="input-wrapper">
+        <input type="text" id="question" placeholder="Задай свой вопрос..." oninput="toggleClearButton()" onkeypress="handleKeyPress(event)">
+        <span class="clear-btn" onclick="clearInput()">✖</span>
+    </div>
     <button onclick="getAnswer()">Принять решение</button>
     <div class="response" id="response"></div>
 
@@ -152,7 +247,6 @@
     </footer>
 
     <script>
-        // Список ответов
         const answers = [
             "Да", "Нет", "Может быть", "Однозначно", "Сомневаюсь", "Решай сам", "Время покажет",
             "Почему бы и нет?", "Не сейчас", "Определённо да!", "Не стоит", "Спроси еще раз",
@@ -168,26 +262,52 @@
             "Слишком рано", "Позже", "Без сомнений", "Лучше нет"
         ];
 
+        let lastQuestion = "";
+
+        function toggleClearButton() {
+            const clearBtn = document.querySelector('.clear-btn');
+            clearBtn.style.display = document.getElementById('question').value ? 'inline' : 'none';
+        }
+
+        function clearInput() {
+            document.getElementById('question').value = '';
+            toggleClearButton();
+        }
+
+        function handleKeyPress(event) {
+            if (event.key === "Enter") {
+                getAnswer();
+            }
+        }
+
         function getAnswer() {
             const questionInput = document.getElementById('question');
             const question = questionInput.value.trim();
             const responseDiv = document.getElementById('response');
 
-            if (!question) {
-                responseDiv.textContent = "Пожалуйста, задайте вопрос!";
-                return;
-            }
+            // Проверка, чтобы вопрос содержал текст и допустимые символы
+            const isValidQuestion = /^[A-Za-zА-Яа-яЁё\s,?]+$/.test(question) && /[A-Za-zА-Яа-яЁё]/.test(question);
 
-            const regex = /^[A-Za-zА-Яа-яЁё\s?]+$/;
-
-            if (!regex.test(question)) {
+            if (!question || question === lastQuestion || !isValidQuestion) {
                 responseDiv.textContent = "Ошибка: Пожалуйста, задайте вопрос!";
+                responseDiv.classList.add("show");
                 return;
             }
 
+            lastQuestion = question;
             const randomAnswer = answers[Math.floor(Math.random() * answers.length)];
             responseDiv.textContent = randomAnswer;
+            responseDiv.classList.add("show");
         }
+
+        function toggleTheme() {
+            document.body.classList.toggle('dark-theme');
+        }
+		function clearInput() {
+		document.getElementById('question').value = '';  // Очищает поле ввода
+		document.getElementById('response').textContent = '';  // Очищает ответ
+		toggleClearButton();  // Обновляет видимость крестика
+		}
     </script>
 
 </body>
